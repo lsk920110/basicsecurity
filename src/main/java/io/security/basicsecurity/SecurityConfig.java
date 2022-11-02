@@ -80,9 +80,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {//파일 찾�
         ;
         http
                 .rememberMe()
-                .rememberMeParameter("remember")//기본 파라미터명은 remember-me
-                .tokenValiditySeconds(3600)//Default는 14일
-                .alwaysRemember(true)
+//                .rememberMeParameter("remember")//기본 파라미터명은 remember-me
+//                .tokenValiditySeconds(3600)//Default는 14일
+//                .alwaysRemember(true)
                 .userDetailsService(userDetailsService)
         ;
     }
