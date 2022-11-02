@@ -1,12 +1,14 @@
 package io.security.basicsecurity;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -24,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {//파일 찾�
                                     //여러가지 설정을 해줌
     //OVERRIDE 메서드 고르는법 : CTRL + O
 
-
+    @Autowired
+    UserDetailsService userDetailsService;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //인가정책
@@ -74,7 +77,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {//파일 찾�
                     }
                 })//successurl과 비슷하지만 기능이 더 많음
                 .deleteCookies("JSESSIONID","remember-me")//삭제하고 싶은 쿠키 명
-
+        ;
+        http
+                .rememberMe()
+                .rememberMeParameter("remember")//기본 파라미터명은 remember-me
+                .tokenValiditySeconds(3600)//Default는 14일
+                .alwaysRemember(true)
+                .userDetailsService(userDetailsService)
         ;
     }
 }
