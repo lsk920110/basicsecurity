@@ -9,10 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration//설정클래스이기 때문에
@@ -53,6 +56,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {//파일 찾�
 //                })
 //                .permitAll()//접근하는 모든 사용자들은 인증받지 않아도 모두 허용
         ;
+        http.
+                logout()
+                .logoutUrl("/logout")//logout을 진행하는 주소 , 원칙적으로는 POST방식으로 진행한다
+                .logoutSuccessUrl("/login")//로그아웃 성공시
+                .addLogoutHandler(new LogoutHandler() {
+                    @Override
+                    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+                        HttpSession session = request.getSession();
+                        session.invalidate();
+                    }
+                })
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        response.sendRedirect("/login");
+                    }
+                })//successurl과 비슷하지만 기능이 더 많음
+                .deleteCookies("JSESSIONID","remember-me")//삭제하고 싶은 쿠키 명
 
+        ;
     }
 }
