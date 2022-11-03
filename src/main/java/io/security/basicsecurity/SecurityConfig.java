@@ -37,9 +37,10 @@ class SecurityConfig2 extends  WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .anyRequest().authenticated();
-        http.formLogin();
+        http
+                .formLogin();
 
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_THREADLOCAL);
+
 
     }
 }
